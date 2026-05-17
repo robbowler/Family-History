@@ -689,7 +689,7 @@ section { padding: 100px 36px; position: relative; }
 }
 
 
-/* Surname meanings inside Origins */
+/* Expanded surname feature */
 .surname-meanings {
   max-width: 1180px;
   margin: 76px auto 0;
@@ -697,7 +697,7 @@ section { padding: 100px 36px; position: relative; }
   border-top: 1px solid var(--rule);
 }
 .surname-meanings-head {
-  max-width: 760px;
+  max-width: 820px;
   margin: 0 auto 44px;
   text-align: center;
 }
@@ -725,77 +725,245 @@ section { padding: 100px 36px; position: relative; }
   color: var(--ink-soft);
   font-style: italic;
 }
-.surname-origin-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 18px;
-}
-.surname-origin-card {
-  grid-column: span 3;
-  padding: 26px 28px 24px;
-  border: 1px solid var(--rule);
-  background: rgba(255, 250, 235, 0.46);
+.surname-ledger {
+  max-width: 1080px;
+  margin: 0 auto;
+  border-top: 2px solid var(--oxblood);
+  border-bottom: 1px solid rgba(139, 122, 85, 0.42);
+  background:
+    linear-gradient(90deg, rgba(139, 58, 46, 0.055), transparent 14%, transparent 86%, rgba(168, 122, 61, 0.07)),
+    rgba(255, 250, 235, 0.44);
   position: relative;
-  overflow: hidden;
 }
-.surname-origin-card::before {
+.surname-ledger::before,
+.surname-ledger::after {
   content: '';
   position: absolute;
-  inset: 8px;
-  border: 1px solid rgba(139, 122, 85, 0.22);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(139, 122, 85, 0.32);
+}
+.surname-ledger::before { left: 18px; }
+.surname-ledger::after { right: 18px; }
+.surname-radio {
+  position: absolute;
+  opacity: 0;
   pointer-events: none;
 }
-.surname-origin-card.featured {
-  grid-column: 1 / -1;
-  background: linear-gradient(135deg, rgba(139, 58, 46, 0.08), rgba(168, 122, 61, 0.08));
-  border-top: 3px solid var(--oxblood);
-}
-.surname-origin-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: baseline;
-  margin-bottom: 16px;
+.surname-ledger-tabs {
   position: relative;
   z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-bottom: 1px solid rgba(139, 122, 85, 0.34);
+  background: rgba(235, 223, 193, 0.34);
 }
-.surname-origin-name {
-  font-family: var(--serif-display);
-  font-size: clamp(32px, 4vw, 48px);
-  font-style: italic;
-  color: var(--oxblood);
-  line-height: 1;
+.surname-ledger-tabs label {
+  min-height: 92px;
+  padding: 18px 16px 16px;
+  cursor: pointer;
+  border-right: 1px solid rgba(139, 122, 85, 0.24);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 7px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
-.surname-origin-type {
+.surname-ledger-tabs label:last-child { border-right: 0; }
+.surname-ledger-tabs label:hover {
+  background: rgba(139, 58, 46, 0.06);
+}
+.surname-ledger-tabs label span {
   font-family: var(--mono);
   font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--ink-mute);
-  text-align: right;
+  letter-spacing: 0.18em;
+  color: var(--gold);
 }
-.surname-origin-meaning,
-.surname-origin-note {
+.surname-ledger-tabs label strong {
+  display: block;
+  font-family: var(--serif-display);
+  font-size: clamp(22px, 2.1vw, 34px);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 0.95;
+  color: var(--ink);
+}
+.surname-ledger-tabs label em {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--ink-mute);
+}
+#surname-bowler:checked ~ .surname-ledger-tabs label[for="surname-bowler"],
+#surname-brind:checked ~ .surname-ledger-tabs label[for="surname-brind"],
+#surname-evans:checked ~ .surname-ledger-tabs label[for="surname-evans"],
+#surname-mackie:checked ~ .surname-ledger-tabs label[for="surname-mackie"],
+#surname-philpot:checked ~ .surname-ledger-tabs label[for="surname-philpot"],
+#surname-bardall:checked ~ .surname-ledger-tabs label[for="surname-bardall"] {
+  background: var(--oxblood);
+  color: var(--paper);
+  transform: translateY(-1px);
+}
+#surname-bowler:checked ~ .surname-ledger-tabs label[for="surname-bowler"] span,
+#surname-bowler:checked ~ .surname-ledger-tabs label[for="surname-bowler"] strong,
+#surname-bowler:checked ~ .surname-ledger-tabs label[for="surname-bowler"] em,
+#surname-brind:checked ~ .surname-ledger-tabs label[for="surname-brind"] span,
+#surname-brind:checked ~ .surname-ledger-tabs label[for="surname-brind"] strong,
+#surname-brind:checked ~ .surname-ledger-tabs label[for="surname-brind"] em,
+#surname-evans:checked ~ .surname-ledger-tabs label[for="surname-evans"] span,
+#surname-evans:checked ~ .surname-ledger-tabs label[for="surname-evans"] strong,
+#surname-evans:checked ~ .surname-ledger-tabs label[for="surname-evans"] em,
+#surname-mackie:checked ~ .surname-ledger-tabs label[for="surname-mackie"] span,
+#surname-mackie:checked ~ .surname-ledger-tabs label[for="surname-mackie"] strong,
+#surname-mackie:checked ~ .surname-ledger-tabs label[for="surname-mackie"] em,
+#surname-philpot:checked ~ .surname-ledger-tabs label[for="surname-philpot"] span,
+#surname-philpot:checked ~ .surname-ledger-tabs label[for="surname-philpot"] strong,
+#surname-philpot:checked ~ .surname-ledger-tabs label[for="surname-philpot"] em,
+#surname-bardall:checked ~ .surname-ledger-tabs label[for="surname-bardall"] span,
+#surname-bardall:checked ~ .surname-ledger-tabs label[for="surname-bardall"] strong,
+#surname-bardall:checked ~ .surname-ledger-tabs label[for="surname-bardall"] em {
+  color: var(--paper);
+}
+.surname-ledger-panels {
   position: relative;
   z-index: 1;
+  padding: 34px clamp(28px, 5vw, 58px) 38px;
 }
-.surname-origin-meaning {
-  font-size: 18px;
-  line-height: 1.58;
-  color: var(--ink-soft);
+.surname-ledger-panel {
+  display: none;
+  animation: surnamePageIn 0.28s ease both;
+}
+@keyframes surnamePageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#surname-bowler:checked ~ .surname-ledger-panels .panel-bowler,
+#surname-brind:checked ~ .surname-ledger-panels .panel-brind,
+#surname-evans:checked ~ .surname-ledger-panels .panel-evans,
+#surname-mackie:checked ~ .surname-ledger-panels .panel-mackie,
+#surname-philpot:checked ~ .surname-ledger-panels .panel-philpot,
+#surname-bardall:checked ~ .surname-ledger-panels .panel-bardall {
+  display: block;
+}
+.surname-panel-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 210px;
+  gap: 28px;
+  align-items: start;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(139, 122, 85, 0.28);
+}
+.ledger-kicker {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.surname-panel-heading h4 {
+  font-family: var(--serif-display);
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 0.9;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--oxblood);
   margin-bottom: 14px;
 }
-.surname-origin-note {
-  font-family: var(--serif-body);
-  font-size: 16px;
-  font-style: italic;
+.surname-panel-heading p {
+  max-width: 680px;
+  font-size: 20px;
+  line-height: 1.48;
+  color: var(--ink-soft);
+}
+.ledger-branch-card {
+  border: 1px solid rgba(139, 122, 85, 0.35);
+  background: rgba(244, 234, 213, 0.54);
+  padding: 18px 18px 16px;
+  text-align: right;
+}
+.ledger-branch-card span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--ink-mute);
-  padding-top: 14px;
-  border-top: 1px solid rgba(139, 122, 85, 0.28);
+  margin-bottom: 6px;
+}
+.ledger-branch-card strong {
+  font-family: var(--serif-display);
+  font-size: 24px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink);
+}
+.surname-panel-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: 32px;
+  align-items: start;
+}
+.surname-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+}
+.surname-facts div {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 22px;
+  padding: 17px 0;
+  border-top: 1px solid rgba(139, 122, 85, 0.22);
+}
+.surname-facts div:first-child { padding-top: 0; border-top: 0; }
+.surname-facts dt {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.surname-facts dd {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.surname-story-box {
+  margin-top: 0;
+  padding: 24px 24px 26px;
+  border: 1px solid rgba(139, 58, 46, 0.32);
+  border-left: 4px solid var(--oxblood);
+  background: linear-gradient(180deg, rgba(139, 58, 46, 0.075), rgba(168, 122, 61, 0.055));
+  box-shadow: 0 10px 24px rgba(45, 38, 31, 0.06);
+}
+.surname-story-box .story-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin-bottom: 10px;
+}
+.surname-story-box p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  font-style: italic;
 }
 .surname-source-note {
-  max-width: 860px;
-  margin: 28px auto 0;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 36px 34px;
   text-align: center;
   font-family: var(--mono);
   font-size: 10px;
@@ -805,13 +973,22 @@ section { padding: 100px 36px; position: relative; }
   color: var(--ink-mute);
 }
 
-@media (max-width: 880px) {
-  .surname-origin-grid { grid-template-columns: 1fr; }
-  .surname-origin-card,
-  .surname-origin-card.featured { grid-column: auto; }
-  .surname-origin-top { flex-direction: column; gap: 8px; }
-  .surname-origin-type { text-align: left; }
+@media (max-width: 980px) {
+  .surname-ledger-tabs { grid-template-columns: repeat(3, 1fr); }
+  .surname-panel-heading,
+  .surname-panel-body { grid-template-columns: 1fr; }
+  .ledger-branch-card { text-align: left; max-width: 320px; }
 }
+@media (max-width: 620px) {
+  .surname-ledger::before,
+  .surname-ledger::after { display: none; }
+  .surname-ledger-tabs { grid-template-columns: repeat(2, 1fr); }
+  .surname-ledger-tabs label { min-height: 78px; padding: 14px 12px; }
+  .surname-ledger-panels { padding: 28px 20px 30px; }
+  .surname-facts div { grid-template-columns: 1fr; gap: 6px; }
+  .surname-panel-heading h4 { font-size: clamp(38px, 14vw, 56px); }
+}
+
 
 /* =========== TREE =========== */
 .tree-section {
