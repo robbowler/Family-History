@@ -126,8 +126,10 @@ body {
 
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: clamp(16px, 2vw, 32px);
   list-style: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 .nav-links a {
   color: var(--ink-soft);
@@ -156,8 +158,8 @@ body {
 @media (max-width: 700px) {
   .nav-inner { padding: 12px 18px; }
   .mark-label { display: none; }
-  .nav-links { gap: 14px; }
-  .nav-links a { font-size: 10px; letter-spacing: 0.1em; }
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 9px; letter-spacing: 0.08em; }
 }
 
 /* =========== HERO =========== */
@@ -1269,36 +1271,50 @@ section { padding: 100px 36px; position: relative; }
 .stories-grid {
   max-width: 1300px;
   margin: 0 auto;
+}
+
+.stories-masonry {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: auto;
-  gap: 32px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+  margin-top: 28px;
+}
+
+.story-column {
+  display: contents;
 }
 
 .story {
-  padding: 36px 32px;
+  padding: 32px 30px;
   background: rgba(255, 250, 235, 0.55);
   border: 1px solid var(--rule);
   position: relative;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
 }
 .story:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(60, 40, 20, 0.08);
+  border-color: rgba(139, 58, 46, 0.55);
 }
 .story-large {
-  grid-column: span 2;
-  grid-row: span 2;
+  width: 100%;
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
-  padding: 50px 44px;
-  display: flex;
-  flex-direction: column;
+  padding: 48px 44px;
+}
+.story-large .story-body {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+  align-items: start;
 }
 .story-large .story-tag { color: var(--highlight); border-color: var(--highlight); }
 .story-large .story-title { color: var(--paper); }
-.story-large .story-body p { color: var(--paper-deep); }
+.story-large .story-body p { color: var(--paper-deep); margin-bottom: 0; }
 .story-large strong { color: var(--highlight); }
 .story-large em { color: var(--paper); }
 
@@ -1311,27 +1327,28 @@ section { padding: 100px 36px; position: relative; }
   color: var(--oxblood);
   padding: 5px 12px;
   border: 1px solid var(--oxblood);
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 .story-title {
   font-family: var(--serif-display);
-  font-size: clamp(26px, 2.6vw, 36px);
+  font-size: clamp(25px, 2.4vw, 34px);
   font-weight: 400;
   font-style: italic;
   line-height: 1.05;
   color: var(--ink);
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 .story-large .story-title {
   font-size: clamp(38px, 4vw, 52px);
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 .story-body p {
   font-size: 17px;
   line-height: 1.65;
   color: var(--ink-soft);
-  margin-bottom: 16px;
+  margin-bottom: 15px;
 }
+.story-body p:last-child { margin-bottom: 0; }
 .story-large .story-body p { font-size: 18px; }
 .story-body strong {
   font-weight: 600;
@@ -1343,8 +1360,8 @@ section { padding: 100px 36px; position: relative; }
   color: var(--ink);
 }
 .story-foot {
-  margin-top: auto;
-  padding-top: 24px;
+  margin-top: 24px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1362,14 +1379,24 @@ section { padding: 100px 36px; position: relative; }
   color: var(--paper-deep);
   opacity: 0.7;
 }
+.story:not(.story-large) .story-body {
+  flex: 1 1 auto;
+}
+.story:not(.story-large) .story-foot {
+  margin-top: auto;
+}
+.story:not(.story-large) .story-cite {
+  color: var(--ink-mute);
+}
 
 @media (max-width: 1000px) {
-  .stories-grid { grid-template-columns: repeat(2, 1fr); }
-  .story-large { grid-column: span 2; grid-row: auto; }
+  .stories-masonry { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .story-large .story-body { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
-  .stories-grid { grid-template-columns: 1fr; }
-  .story-large { grid-column: span 1; padding: 36px 28px; }
+  .stories-masonry { grid-template-columns: 1fr; }
+  .story,
+  .story-large { padding: 34px 26px; }
 }
 
 /* =========== DNA =========== */
@@ -1752,6 +1779,7 @@ section { padding: 100px 36px; position: relative; }
       <li><a href="#stories">Stories</a></li>
       <li><a href="#dna">DNA</a></li>
       <li><a href="#timeline">Timeline</a></li>
+      <li><a href="#names">Names</a></li>
     </ul>
   </div>
 </nav>
@@ -2274,111 +2302,146 @@ section { padding: 100px 36px; position: relative; }
   <div class="stories-grid">
 
     <article class="story story-large">
-      <div class="story-tag">Scandal · 1852</div>
-      <h3 class="story-title">The Convict &amp; the Train</h3>
-      <div class="story-body">
-        <p><strong>John Bowler</strong> (1819–1881) was Robert's 4x great-grandfather. The latest tree extract also links him to an older <strong>John Bowler</strong>, estimated born around 1795 in the Wootton area of Bedfordshire, while the baptism note still treats his father as alleged. The archive now keeps that uncertainty visible rather than flattening it into a single simple answer.</p>
-        <p>On 13 October 1852, at Aspley Guise, John was caught stealing two planks of wood — the property of one William Handscomb — worth just five shillings. The official record describes him: <em>"Height: 5 ft 5 inches; Hair: Black; Eyes: Grey; Visage: Round; Complexion: Fresh."</em></p>
-        <p>But the family tragedy belongs to his wife <strong>Rhoda Johnson</strong>, whom he had married at St James' Church, Biddenham, on 12 October 1843. Rhoda was a victim of the <strong>Kentish Town railway disaster</strong> of 2 September 1861, when an excursion train collided with a freight train near Kentish Town station in London. Sixteen people were killed and 317 injured.</p>
-      </div>
-      <div class="story-foot">
-        <span class="story-line"></span>
-        <span class="story-cite">Bedfordshire petty sessions, 1852 · Wikipedia: Kentish Town rail accident</span>
-      </div>
-    </article>
+          <div class="story-tag">Baptism · Crime · Disaster</div>
+          <h3 class="story-title">The Convict &amp; the Train</h3>
+          <div class="story-body">
+            <p><strong>John Bowler</strong> (1819–1881) was Robert's 4x great-grandfather. His baptism gives the Bowler line a more complicated beginning: on <strong>11 September 1819</strong>, he was baptised at Wootton as the <strong>illegitimate son of Elizabeth Purser</strong>, and was named after his alleged father — a <strong>Wootton shoemaker</strong>. That makes the older John Bowler an important recorded clue, but not a fully settled proof point, so the archive keeps the uncertainty visible.</p>
+            <p>On 13 October 1852, at Aspley Guise, John was caught stealing two planks of wood — the property of one William Handscomb — worth just five shillings. The official record describes him: <em>"Height: 5 ft 5 inches; Hair: Black; Eyes: Grey; Visage: Round; Complexion: Fresh."</em></p>
+            <p>But the family tragedy belongs to his wife <strong>Rhoda Johnson</strong>, whom he had married at St James' Church, Biddenham, on 12 October 1843. Rhoda was a victim of the <strong>Kentish Town railway disaster</strong> of 2 September 1861, when an excursion train collided with a freight train near Kentish Town station in London. Sixteen people were killed and 317 injured.</p>
+          </div>
+          <div class="story-foot">
+            <span class="story-line"></span>
+            <span class="story-cite">Wootton baptism note, 1819 · Bedfordshire petty sessions, 1852 · Kentish Town rail accident reference</span>
+          </div>
+        </article>
+
+    <article class="story story-large">
+          <div class="story-tag">War · POW · 1944</div>
+          <h3 class="story-title">Uncle Ernie at Stone Bridge</h3>
+          <div class="story-body">
+            <p><strong>Ernest Reginald “Uncle Ernie” Mills</strong> (11 September 1919–18 July 2013) enters the archive through the maternal Mackie / Yates line: he married <strong>Joyce Yates</strong> at Hinckley Parish Church on <strong>29 August 1942</strong>, while he was home on leave. Before the war record overtakes the story, the 1939 Register places him in Leicestershire as a single <em>interlock operative</em> in underwear manufacture — an ordinary Midlands working life pulled into world history.</p>
+            <p>By October 1944 he was <strong>Lance Sergeant 4860399</strong>, serving as sergeant of <strong>14 Platoon, C Company, 1st Battalion Leicestershire Regiment</strong> at Stone Bridge near Wuustwezel, Belgium. His own account is stark: the platoon arrived expecting the area to be clear, but the Germans had waited, ranged the position, knocked out nearby support weapons and turned the road into a shooting gallery. With the farmhouse on fire and Lieutenant Gaunt wounded, eleven men were captured; Ernie was taken prisoner and ended up in <strong>Stalag VIII-C</strong>.</p>
+            <p>The reason this belongs as a highlight is the scale behind the farm. Stone Bridge sat within the fighting around Wuustwezel and the wider Scheldt campaign. Antwerp could not feed the Allied advance until the Scheldt approaches were cleared; every bridge, field and farmhouse helped decide whether supplies could reach the armies pushing into Germany. Uncle Ernie's story is therefore both family memory and part of the larger fight that kept Europe moving towards liberation.</p>
+          </div>
+          <div class="story-foot">
+            <span class="story-line"></span>
+            <span class="story-cite">Latest GEDCOM extract · Ernest R Mills Stone Bridge account · Royal Leicestershire Regiment history · Liberation Route Europe · Veterans Affairs Canada / UK MOD Scheldt-Walcheren booklet</span>
+          </div>
+        </article>
+
+  <div class="stories-masonry stories-card-grid">
+    <article class="story">
+<div class="story-tag">Longevity · 1884–1982</div>
+<h3 class="story-title">The Longest Life in the Bloodline</h3>
+<div class="story-body">
+<p>The latest GEDCOM extract points to <strong>Ethel N Evans</strong> as the longest-lived <strong>blood relative</strong> currently recorded in the tree. Her birth can now be confirmed as <strong>3 July 1884</strong> in <strong>Aldbourne, Wiltshire</strong>. She died there on <strong>13 April 1982</strong>, giving her a confirmed lifespan of <strong>97 years, 9 months and 10 days</strong>.</p>
+<p>Ethel sits close to the core line as Robert's <strong>great-great-grandmother</strong>: daughter of Thomas Brind and Mary Belcher, wife of <strong>Edward Harry Evans</strong>, and mother of <strong>Margaret Evans</strong>, whose line runs down through Anthony, Simon and Robert Bowler.</p>
+<p>That confirmed birth date makes Ethel the longest exactly dated lifespan currently identified in the archive, not just the bloodline. A useful comparison is <strong>Stanley Richard Lance</strong> (23 January 1908–2 July 2005), who lived <strong>97 years, 5 months and 9 days</strong> and married into the Bardall branch through Marjorie Mona Henrietta Bardall.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Latest GEDCOM extract · confirmed birth detail · Ethel N Evans · Stanley Richard Lance</span>
+</div>
+</article>
 
     <article class="story">
-      <div class="story-tag">Legend · 1845–1927</div>
-      <h3 class="story-title">The Captain of Shearers</h3>
-      <div class="story-body">
-        <p><strong>Thomas Brind</strong> of Aldbourne, Wiltshire, lived 82 years. A surviving newspaper article describes him as <em>"a remarkable man"</em> who, among other things, was a <strong>captain of sheep shearers</strong> — leading teams across the Wiltshire downs at the height of the English wool trade.</p>
-        <p>His direct line stretches back to Thomas Brind of Rusteshall, born in 1460.</p>
-      </div>
-    </article>
+<div class="story-tag">Rebellion · 1797–1817</div>
+<h3 class="story-title">The Luddite Bitter</h3>
+<div class="story-body">
+<p><strong>Daniel Diggle</strong> appears in Robert's family tree as his <strong>6th great-granduncle</strong>. Born in Basford in 1797, he married <strong>Catherine Cockram</strong> in November 1816; their daughter, Sarah Ann, was christened later in 1817.</p>
+<p>His short life became tied to the final, violent edge of the Luddite story. Contemporary newspaper reports record that he was convicted of shooting at George Kerry in Radford and was executed in front of Nottingham's Shire Hall on <strong>2 April 1817</strong>.</p>
+<p>Two centuries later, Nottingham's Navigation Brewery turned that grim local memory into a pint: <strong>Daniel Diggle</strong>, a <strong>3.8% English bitter</strong>, described as a malty, smooth beer celebrating Nottingham's history of rebellion and named after the infamous Luddite.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Ancestry family tree record · Luddite Bicentenary / Nottingham Review &amp; Nottingham Journal · Navigation Brewery / Untappd</span>
+</div>
+</article>
 
     <article class="story">
-      <div class="story-tag">Possible Kin · 1753–1816</div>
-      <h3 class="story-title">A Founding Father?</h3>
-      <div class="story-body">
-        <p>The family records hint at a tantalising distant relation: <strong>James McHenry</strong> — Irish-born physician, signer of the U.S. Constitution and <strong>Secretary of War under Washington and Adams</strong> (1796–1800).</p>
-        <p>Fort McHenry in Baltimore — where the bombardment inspired <em>The Star-Spangled Banner</em> — bears his name. Filed in the archive under "Famous Relative", awaiting further proof.</p>
-      </div>
-    </article>
+<div class="story-tag">Notable Kin · 1807–1867</div>
+<h3 class="story-title">The Union General Governor</h3>
+<div class="story-body">
+<p><strong>William Bowen Campbell</strong> appears in Robert's family tree as a <strong>half 6th cousin 7x removed</strong>, through the branch shown from Elizabeth "Lady Countess Bedford" Long.</p>
+<p>Campbell became <strong>Governor of Tennessee</strong> from 1851 to 1853, represented Tennessee in Congress, and was later appointed by President Abraham Lincoln as a <strong>brigadier general of Volunteers</strong> during the American Civil War. His military record also reached back to the Seminole War and the Mexican-American War.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Family tree screenshot · National Governors Association · U.S. House of Representatives</span>
+</div>
+</article>
 
     <article class="story">
-      <div class="story-tag">Notable Kin · 1807–1867</div>
-      <h3 class="story-title">The Union General Governor</h3>
-      <div class="story-body">
-        <p><strong>William Bowen Campbell</strong> appears in Robert's family tree as a <strong>half 6th cousin 7x removed</strong>, through the branch shown from Elizabeth &quot;Lady Countess Bedford&quot; Long.</p>
-        <p>Campbell became <strong>Governor of Tennessee</strong> from 1851 to 1853, represented Tennessee in Congress, and was later appointed by President Abraham Lincoln as a <strong>brigadier general of Volunteers</strong> during the American Civil War. His military record also reached back to the Seminole War and the Mexican-American War.</p>
-      </div>
-      <div class="story-foot">
-        <span class="story-line"></span>
-        <span class="story-cite">Family tree screenshot · National Governors Association · U.S. House of Representatives</span>
-      </div>
-    </article>
+<div class="story-tag">Legend · 1845–1927</div>
+<h3 class="story-title">The Captain of Shearers</h3>
+<div class="story-body">
+<p><strong>Thomas Brind</strong> of Aldbourne, Wiltshire, lived 82 years. A surviving newspaper article describes him as <em>"a remarkable man"</em> who, among other things, was a <strong>captain of sheep shearers</strong> — leading teams across the Wiltshire downs at the height of the English wool trade.</p>
+<p>His direct line stretches back to Thomas Brind of Rusteshall, born in 1460.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Latest GEDCOM extract · Aldbourne/Wiltshire family records · surviving newspaper article on Thomas Brind</span>
+</div></article>
 
     <article class="story">
-      <div class="story-tag">Notable Kin · 1867–1955</div>
-      <h3 class="story-title">The Name Behind the Award</h3>
-      <div class="story-body">
-        <p><strong>Denton True &quot;Cy&quot; Young</strong> appears in Robert's family tree as a <strong>half 8th cousin 3x removed</strong>, connected through the Susan Sellers branch shown in the relationship chart.</p>
-        <p>Young became one of baseball's defining pitchers: he won two games in the first modern World Series in 1903, pitched the first perfect game of the 20th century in 1904, and finished with records still attached to his name, including <strong>7,356 innings pitched</strong>, <strong>815 games started</strong> and <strong>749 complete games</strong>.</p>
-      </div>
-      <div class="story-foot">
-        <span class="story-line"></span>
-        <span class="story-cite">Family tree screenshot · National Baseball Hall of Fame · Encyclopedia of Cleveland History</span>
-      </div>
-    </article>
-
-
+<div class="story-tag">Notable Kin · 1867–1955</div>
+<h3 class="story-title">The Name Behind the Award</h3>
+<div class="story-body">
+<p><strong>Denton True "Cy" Young</strong> appears in Robert's family tree as a <strong>half 8th cousin 3x removed</strong>, connected through the Susan Sellers branch shown in the relationship chart.</p>
+<p>Young became one of baseball's defining pitchers: he won two games in the first modern World Series in 1903, pitched the first perfect game of the 20th century in 1904, and finished with records still attached to his name, including <strong>7,356 innings pitched</strong>, <strong>815 games started</strong> and <strong>749 complete games</strong>.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Family tree screenshot · National Baseball Hall of Fame · Encyclopedia of Cleveland History</span>
+</div>
+</article>
 
     <article class="story">
-      <div class="story-tag">Rebellion · 1797–1817</div>
-      <h3 class="story-title">The Luddite Bitter</h3>
-      <div class="story-body">
-        <p><strong>Daniel Diggle</strong> appears in Robert's family tree as his <strong>6th great-granduncle</strong>. Born in Basford in 1797, he married <strong>Catherine Cockram</strong> in November 1816; their daughter, Sarah Ann, was christened later in 1817.</p>
-        <p>His short life became tied to the final, violent edge of the Luddite story. Contemporary newspaper reports record that he was convicted of shooting at George Kerry in Radford and was executed in front of Nottingham's Shire Hall on <strong>2 April 1817</strong>.</p>
-        <p>Two centuries later, Nottingham's Navigation Brewery turned that grim local memory into a pint: <strong>Daniel Diggle</strong>, a <strong>3.8% English bitter</strong>, described as a malty, smooth beer celebrating Nottingham's history of rebellion and named after the infamous Luddite.</p>
-      </div>
-      <div class="story-foot">
-        <span class="story-line"></span>
-        <span class="story-cite">Ancestry family tree record · Luddite Bicentenary / Nottingham Review &amp; Nottingham Journal · Navigation Brewery / Untappd</span>
-      </div>
-    </article>
+<div class="story-tag">Possible Kin · 1753–1816</div>
+<h3 class="story-title">A Founding Father?</h3>
+<div class="story-body">
+<p>The family records hint at a tantalising distant relation: <strong>James McHenry</strong> — Irish-born physician, signer of the U.S. Constitution and <strong>Secretary of War under Washington and Adams</strong> (1796–1800).</p>
+<p>Fort McHenry in Baltimore — where the bombardment inspired <em>The Star-Spangled Banner</em> — bears his name. Filed in the archive under "Famous Relative", awaiting further proof.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Family tree “Famous Relative” note · Fort McHenry / U.S. constitutional history references · awaiting further proof</span>
+</div></article>
 
     <article class="story">
-      <div class="story-tag">Migration · 1838</div>
-      <h3 class="story-title">From Aberdeenshire South</h3>
-      <div class="story-body">
-        <p><strong>George Smith Mackie</strong> (1838–1885) was born in <strong>Culsalmond, Aberdeenshire</strong> — the only Scottish thread in an otherwise overwhelmingly English tree. His move south to Surrey, and his son's onward migration to Colchester, brought the Mackie name into the English Midlands where it would eventually meet the Bowler line a century later.</p>
-      </div>
-    </article>
+<div class="story-tag">Migration · 1838</div>
+<h3 class="story-title">From Aberdeenshire South</h3>
+<div class="story-body">
+<p><strong>George Smith Mackie</strong> (1838–1885) was born in <strong>Culsalmond, Aberdeenshire</strong> — the only Scottish thread in an otherwise overwhelmingly English tree. His move south to Surrey, and his son's onward migration to Colchester, brought the Mackie name into the English Midlands where it would eventually meet the Bowler line a century later.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Latest GEDCOM extract · Mackie branch records · Aberdeenshire-to-England place trail</span>
+</div></article>
 
     <article class="story">
-      <div class="story-tag">Trade · 1939</div>
-      <h3 class="story-title">A Fruit-seller in Islington</h3>
-      <div class="story-body">
-        <p>The 1939 Register lists <strong>Frederick Joseph Bardall</strong> (1882–1940) of Islington, married, with the occupation simply: <em>Fruit Salesman</em>. His daughter Alice Maude Bishop — Robert's great-great-grandmother — had been born somewhere altogether more exotic: <strong>Meerut, India</strong>, in 1882. The family had military and colonial threads woven through it.</p>
-      </div>
-    </article>
+<div class="story-tag">Trade · 1939</div>
+<h3 class="story-title">A Fruit-seller in Islington</h3>
+<div class="story-body">
+<p>The 1939 Register lists <strong>Frederick Joseph Bardall</strong> (1882–1940) of Islington, married, with the occupation simply: <em>Fruit Salesman</em>. His wife, <strong>Alice Maude Bishop</strong> — Robert's great-great-grandmother — had been born somewhere altogether more exotic: <strong>Meerut, India</strong>, in 1882. The family had military and colonial threads woven through it.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">1939 Register · latest GEDCOM extract · Bardall/Bishop branch records</span>
+</div></article>
 
     <article class="story">
-      <div class="story-tag">Industry · 1893</div>
-      <h3 class="story-title">A Brickmaker's Wedding</h3>
-      <div class="story-body">
-        <p>The parish register of Holy Trinity, Hinckley, records the marriage on 8 October 1893 of <strong>Albert Cheshire Yates</strong>, age 20, brickmaker, to <strong>Ann Diggle</strong>, age 19. From their union the Yates-Cheshire line ran through the Midlands brick and hosiery trades — straight down to Robert's grandmother Betty Cheshire Yates.</p>
-      </div>
-    </article>
+<div class="story-tag">Industry · 1893</div>
+<h3 class="story-title">A Brickmaker's Wedding</h3>
+<div class="story-body">
+<p>The parish register of Holy Trinity, Hinckley, records the marriage on 8 October 1893 of <strong>Albert Cheshire Yates</strong>, age 20, brickmaker, to <strong>Ann Diggle</strong>, age 19. From their union the Yates-Cheshire line ran through the Midlands brick and hosiery trades — straight down to Robert's grandmother Betty Cheshire Yates.</p>
+</div>
+<div class="story-foot">
+<span class="story-line"></span>
+<span class="story-cite">Holy Trinity, Hinckley parish register, 1893 · latest GEDCOM extract · Yates-Cheshire branch records</span>
+</div></article>
+  </div>
 
-    <article class="story">
-      <div class="story-tag">Domestic · 1953</div>
-      <h3 class="story-title">The Biggest Peach</h3>
-      <div class="story-body">
-        <p>Among the family's photographs sits one captioned simply, in handwriting from 1953: <em>"Picking fruit in the orchard. The biggest peach Ethel Nancy had ever seen!"</em></p>
-        <p>A small thing, perhaps. But the kind of fragment that makes an archive a family rather than a list.</p>
-      </div>
-    </article>
 
   </div>
 </section>
@@ -2517,7 +2580,7 @@ section { padding: 100px 36px; position: relative; }
       <div class="t-year">1819</div>
       <div class="t-card">
         <h4>John Bowler baptised</h4>
-        <p>11 April. John Bowler, Robert's 4x great-grandfather, is baptised at Wootton, Bedfordshire. The latest tree links him to Elizabeth Purser and to an older John Bowler, estimated born around 1795, while still preserving a note that his father was recorded as alleged.</p>
+        <p>11 September. John Bowler, Robert's 4x great-grandfather, is baptised at Wootton, Bedfordshire. The baptism note records him as the illegitimate son of Elizabeth Purser and says he was named after the alleged father, a Wootton shoemaker.</p>
       </div>
     </div>
 
@@ -2596,7 +2659,7 @@ section { padding: 100px 36px; position: relative; }
 </section>
 
 <!-- SURNAMES MAP -->
-<section class="surnames">
+<section id="names" class="surnames">
   <div class="section-head">
     <span class="section-num">§ VI</span>
     <h2 class="section-title">The Names That Built the Family</h2>
@@ -2670,11 +2733,11 @@ section { padding: 100px 36px; position: relative; }
               <div><dt>Origin</dt><dd>English</dd></div>
               <div><dt>Meaning</dt><dd>Usually read as an occupational surname for someone who made or sold bowls, dishes, cups or drinking vessels. Some surname references also connect it with <em>bole</em>, a hilltop lead-smelting hollow, but that is background to the name rather than proof of a Bowler trade in this tree.</dd></div>
               <div><dt>Likely roots</dt><dd>In Robert's proven line, the Bowler trail currently runs through <strong>Wootton / Biddenham and Clapham in Bedfordshire</strong>, then through London, Middlesex, Hertfordshire and Warwickshire.</dd></div>
-              <div><dt>Earliest known ancestor</dt><dd><strong>John Bowler</strong> (estimated b. 1795, Wootton, Bedfordshire?) is the earliest Bowler currently recorded in the latest tree extract. He is linked as the father, or alleged father, of <strong>John Bowler</strong> (1819–1881), so this should stay as the earliest recorded Bowler rather than a fully settled proof point.</dd></div>
+              <div><dt>Earliest known ancestor</dt><dd><strong>John Bowler</strong> (estimated b. 1795, Wootton, Bedfordshire?) is the earliest Bowler currently recorded in the latest tree extract. He appears through the baptism note for <strong>John Bowler</strong> (1819–1881), which records John as the illegitimate son of Elizabeth Purser and names the alleged father as a Wootton shoemaker. This should therefore stay as an alleged paternal link rather than a fully settled proof point.</dd></div>
             </dl>
             <div class="surname-story-box">
               <span class="story-label">Stories & discoveries</span>
-              <p>The Bowler name anchors one of the strongest human stories in the site. John Bowler (1819–1881), Robert's <strong>4x great-grandfather</strong>, appears in an 1852 criminal record for stealing two planks of wood, while his wife Rhoda Johnson was later caught up in the 1861 Kentish Town railway disaster.</p>
+              <p>The Bowler name anchors one of the strongest human stories in the site: an uncertain baptism in 1819, a petty-theft conviction in 1852, and then family tragedy through Rhoda Johnson's injuries in the 1861 Kentish Town railway disaster.</p>
             </div>
           </div>
         </article>
